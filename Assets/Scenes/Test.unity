@@ -697,7 +697,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1872021976}
-  - component: {fileID: 1872021978}
   - component: {fileID: 1872021979}
   m_Layer: 0
   m_Name: Root
@@ -725,19 +724,6 @@ Transform:
   - {fileID: 939362895}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1872021978
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1872021975}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8227a4d510058914a99dd76c48783177, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _login: {fileID: 0}
 --- !u!114 &1872021979
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -750,7 +736,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 79cda7d2a82a9904286c63a162665dd6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _username: Yadori_Ouchi
+  _username: yadori_ouchi
   _password: ouchi
 --- !u!1660057539 &9223372036854775807
 SceneRoots:

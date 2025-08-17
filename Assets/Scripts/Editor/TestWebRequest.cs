@@ -7,8 +7,8 @@ internal sealed class TestWebRequest : Editor {
     public override void OnInspectorGUI() {
         base.OnInspectorGUI();
         if (GUILayout.Button("テストリクエスト実行")) {
-            WebTest webTest = target as WebTest;
-            webTest.SendRequest();
+            ITestRequestableOnInspector webTest = target as ITestRequestableOnInspector;
+            webTest.SendAnyRequest();
         }
     }
 }
