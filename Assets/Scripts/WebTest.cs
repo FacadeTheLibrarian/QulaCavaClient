@@ -19,18 +19,9 @@ internal sealed class WebTest : MonoBehaviour, ITestRequestableOnInspector {
     public void SetUp(CancellationToken token) {
         _token = token;
     }
-    /*
- *  [Host] => 127.0.0.1
- *  [User-Agent] => UnityPlayer/2023.1.20f1 (UnityWebRequest/1.0, libcurl/8.4.0-DEV)
- *  [Accept] => 
- *  [Accept-Encoding] => deflate, gzip
- *  [Content-Type] => application/x-www-form-urlencoded
- *  [X-Unity-Version] => 2023.1.20f1
- *  [Content-Length] => 36
-*/
     public async UniTask SendAnyRequest() {
         UnityWebRequest.ClearCookieCache();
-        string challange = string.Empty;
+        LoginChallenge challenge = default;
         string url = @"http://127.0.0.1/qula-cava/";
         WWWForm form = new WWWForm();
         form.AddField("username", _username);
@@ -51,36 +42,13 @@ internal sealed class WebTest : MonoBehaviour, ITestRequestableOnInspector {
                 return;
             }
             string response = request.downloadHandler.text;
-            Debug.Log(response);
-            challange = "Hello, world!";
+            challenge = JsonUtility.FromJson<LoginChallenge>(response);
         }
-
-
 
         string loginUrl = @"http://127.0.0.1/qula-cava/login.php";
 
-        string hashedPassword = string.Empty;
-        string hashedResponse = string.Empty;
-        using (SHA256 sha256 = SHA256.Create()) {
-            byte[] byteCodes = Encoding.UTF8.GetBytes(_password);
-            byte[] hashed = sha256.ComputeHash(byteCodes);
-            StringBuilder stringified = new StringBuilder();
-            foreach (byte b in hashed) {
-                stringified.Append(b.ToString("x2"));
-            }
-            hashedPassword = stringified.ToString();
-        }
-        using (SHA256 sha256 = SHA256.Create()) {
-            string stringResponse = hashedPassword + challange;
-            byte[] byteCodes = Encoding.UTF8.GetBytes(stringResponse);
-            byte[] hashed = sha256.ComputeHash(byteCodes);
-
-            StringBuilder stringified = new StringBuilder();
-            foreach (byte b in hashed) {
-                stringified.Append(b.ToString("x2"));
-            }
-            hashedResponse = stringified.ToString();
-        }
+        string hashedPassword = SHA256Wrapper.Hash(_password);
+        string hashedResponse = SHA256Wrapper.Hash(hashedPassword + challenge.data);
         WWWForm loginForm = new WWWForm();
         loginForm.AddField("username", _username);
         loginForm.AddField("response", hashedResponse);
