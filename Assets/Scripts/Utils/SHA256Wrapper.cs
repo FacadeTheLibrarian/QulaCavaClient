@@ -3,7 +3,7 @@ using System.Security.Cryptography;
 using System.Text;
 using UnityEngine;
 
-internal sealed class SHA256Wrapper : MonoBehaviour {
+internal sealed class SHA256Wrapper {
     public static string Hash(in string target) {
         string hashResult = string.Empty;
         using (SHA256 sha256 = SHA256.Create()) {
