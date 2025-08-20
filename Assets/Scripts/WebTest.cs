@@ -71,6 +71,30 @@ internal sealed class WebTest : MonoBehaviour, ITestRequestableOnInspector {
             string response = request.downloadHandler.text;
             Debug.Log(response);
         }
+
+        string logoutUrl = @"http://127.0.0.1/qula-cava/logout.php";
+        WWWForm logoutForm = new WWWForm();
+        logoutForm.AddField("username", _username);
+        using (UnityWebRequest request = UnityWebRequest.Post(logoutUrl, logoutForm)) {
+            request.timeout = ServerUtility.DEFAULT_TIMEOUT;
+            request.SetRequestHeader(ServerUtility.CONTENT_TYPE, ServerUtility.CONTENT_TYPE_X_WWW_FORM);
+            request.downloadHandler = new DownloadHandlerBuffer();
+            try {
+                await request.SendWebRequest().ToUniTask(cancellationToken: _token);
+            }
+            catch {
+                Debug.LogError("Request was cancelled or failed to send.");
+                return;
+            }
+            if (request.result == UnityWebRequest.Result.ConnectionError || request.result == UnityWebRequest.Result.ProtocolError) {
+                Debug.LogError($"Error: {request.error}");
+                return;
+            }
+            string response = request.downloadHandler.text;
+            Debug.Log(response);
+        }
+
+        UnityWebRequest.ClearCookieCache();
     }
 }
 
