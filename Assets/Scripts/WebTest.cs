@@ -1,14 +1,7 @@
 ﻿using System.Threading;
 using Cysharp.Threading.Tasks;
-using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.Networking;
-using Cysharp.Text;
-using System;
-using MiniJSON;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 
 internal sealed class WebTest : MonoBehaviour, ITestRequestableOnInspector {
 
@@ -27,8 +20,8 @@ internal sealed class WebTest : MonoBehaviour, ITestRequestableOnInspector {
         form.AddField("username", _username);
 
         using (UnityWebRequest request = UnityWebRequest.Post(url, form)) {
-            request.timeout = ServerUtility.DEFAULT_TIMEOUT;
-            request.SetRequestHeader(ServerUtility.CONTENT_TYPE, ServerUtility.CONTENT_TYPE_X_WWW_FORM);
+            request.timeout = Server.DEFAULT_TIMEOUT;
+            request.SetRequestHeader(Server.CONTENT_TYPE, Server.CONTENT_TYPE_X_WWW_FORM);
             request.downloadHandler = new DownloadHandlerBuffer();
             try {
                 await request.SendWebRequest().ToUniTask(cancellationToken: _token);
@@ -47,15 +40,15 @@ internal sealed class WebTest : MonoBehaviour, ITestRequestableOnInspector {
 
         string loginUrl = @"http://127.0.0.1/qula-cava/login.php";
 
-        string hashedPassword = SHA256Wrapper.Hash(_password);
-        string hashedResponse = SHA256Wrapper.Hash(hashedPassword + challenge.data);
+        string hashedPassword = SHA256Utility.HashToString(_password);
+        string hashedResponse = SHA256Utility.HashToString(hashedPassword + challenge.data);
         WWWForm loginForm = new WWWForm();
         loginForm.AddField("username", _username);
         loginForm.AddField("response", hashedResponse);
 
         using (UnityWebRequest request = UnityWebRequest.Post(loginUrl, loginForm)) {
-            request.timeout = ServerUtility.DEFAULT_TIMEOUT;
-            request.SetRequestHeader(ServerUtility.CONTENT_TYPE, ServerUtility.CONTENT_TYPE_X_WWW_FORM);
+            request.timeout = Server.DEFAULT_TIMEOUT;
+            request.SetRequestHeader(Server.CONTENT_TYPE, Server.CONTENT_TYPE_X_WWW_FORM);
             request.downloadHandler = new DownloadHandlerBuffer();
             try {
                 await request.SendWebRequest().ToUniTask(cancellationToken: _token);
@@ -76,8 +69,8 @@ internal sealed class WebTest : MonoBehaviour, ITestRequestableOnInspector {
         WWWForm logoutForm = new WWWForm();
         logoutForm.AddField("username", _username);
         using (UnityWebRequest request = UnityWebRequest.Post(logoutUrl, logoutForm)) {
-            request.timeout = ServerUtility.DEFAULT_TIMEOUT;
-            request.SetRequestHeader(ServerUtility.CONTENT_TYPE, ServerUtility.CONTENT_TYPE_X_WWW_FORM);
+            request.timeout = Server.DEFAULT_TIMEOUT;
+            request.SetRequestHeader(Server.CONTENT_TYPE, Server.CONTENT_TYPE_X_WWW_FORM);
             request.downloadHandler = new DownloadHandlerBuffer();
             try {
                 await request.SendWebRequest().ToUniTask(cancellationToken: _token);
